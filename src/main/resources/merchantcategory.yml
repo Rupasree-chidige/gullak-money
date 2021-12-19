@@ -1,0 +1,8 @@
+- category: Travel
+  merchants: abibus,airasia,yatra,makemytrip,redbus
+- category: Food
+  merchants: dominos,swiggy,zomato
+- category: Shopping
+  merchants: amazon,flipkart,myntra
+- category: Bill
+  merchants: Airtel,BBPSBP,groww,Jio
