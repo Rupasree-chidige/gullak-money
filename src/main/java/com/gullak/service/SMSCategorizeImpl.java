@@ -30,8 +30,10 @@ public class SMSCategorizeImpl implements SMSCategorize{
 		Summary summaryResponse=new Summary();
 		HashMap<String,SummaryItem> hm=new HashMap<>();
 		for(SMS s:sms) {
-			double amount=Double.parseDouble(s.getText().substring(s.getText().indexOf("Rs.")+3, s.getText().indexOf("is")).trim());
-			//String merchant=s.getText().substring(s.getText().indexOf("to")+2, s.getText().indexOf("@")).trim();//swiggy
+			String amountString=searchAmount(s.getText());
+			double amount=0;
+			if(amountString!=null)
+				amount=Double.parseDouble(amountString);
 			String searchkey=searchDefinition(s.getText(),MerchantCategoryLoader.getMerchantcategorymap());
 			if(searchkey!=null) {
 				String category=merchantCategoryLoader.getMerchantCategory(searchkey);
@@ -69,5 +71,20 @@ public class SMSCategorizeImpl implements SMSCategorize{
 	    return null;
 
 	   }
-
+	private String searchAmount(String text) {
+		String pattern="Rs[.\\s]*[0-9,]+[.]*[0-9]*";
+        Pattern pattern1 = Pattern.compile(pattern);    
+        //String text="Thank you for using your Kotak Debit card X2678. Rs.378.00 is debited at Dominos Pizza Hyderabad. on 05-12-2020. Avl balance is Rs.13,909.21";
+        Matcher matcher = pattern1.matcher(text);    
+        boolean found = matcher.find();   
+        while (found) {
+            String ans=matcher.group().replace("Rs","").replace(",","").trim();
+            if(ans.startsWith(".")){
+                return ans.substring(1); 
+            }
+             return ans;
+        } 
+        return null;
+	}
 }
+	
